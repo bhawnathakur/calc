@@ -1,0 +1,224 @@
+<mat-toolbar color="warn" >
+    <mat-toolbar-row  >
+      
+      <span class="title-center" >OMSAS GPA Calculator</span>
+    </mat-toolbar-row>
+    
+  </mat-toolbar>
+<div class="container">
+    <div class="row" style="margin:10px 0">
+      
+        <div class="col-12 text-center">
+         <a href="http://www.futurememd.com "> <img src="assets/img/FutureMe_logo.png" class="img-fluid" style="min-width:200px;"  alt=""></a>
+        </div>
+       
+      </div>
+<!--top row ends -->
+<div class="row">
+  <div class="col">
+    <p>
+      Welcome to your custom FutureMeMD OMSAS GPA calculator!<br>
+      Select your university and for each course: <br>
+    
+    1) Enter your course number<br>
+    2)  Enter your course weight (e.g. enter "1" for a full-year course, "0.5" for a
+         semester course, etc.)<br>
+    3)  Enter your grade based on your university grading system. The OMSAS grade will show up next to it. <br>
+    4)  State when you took the course (Fall/Winter vs Summer)<br>
+     
+    
+   
+    Add courses and years as needed and then press submit when you are done! You’ll be able to email yourself a copy of the results.
+</p>
+  </div>
+</div>
+<div class="row">
+    <div class="col-4 category_heading" >
+       Select University
+    </div>
+    <div class="col-4">
+        
+          <div class="form-group">
+            
+            <select class="form-control"  (change)="university_changed($event.target.value)" >
+              <option *ngFor="let university of univ_array; let i=index" [value]="i"  >
+                {{ university}}
+
+              </option>
+              
+            </select>
+          </div> 
+          
+    </div>
+    <div class="col-4 category_heading" >
+     
+   </div>
+   <div class="col-4 category_heading" >
+     
+  </div>
+</div>
+<!-- second row ends-->
+<form [formGroup]="mainForm" (ngSubmit)="onSubmit()" >
+    <div class="row">
+        <div class="col-12">
+        
+
+           
+        <div class="row">
+            <div class="col-12" formArrayName="years">
+              <div class="row">
+                <div class="col">
+                  <h3  style="font-size:1.5rem">Cumulative GPA with summer courses</h3>
+                </div>
+                <div class="col" style="font-size:1.5rem;font-weight:bold" *ngIf="totgpa_with_summer !=0">
+                  {{totgpa_with_summer | number:'1.1-2'}}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <h3 style="font-size:1.5rem">Cumulative GPA without summer courses</h3>
+                </div>
+                <div class="col" style="font-size:1.5rem;font-weight:bold" *ngIf="totgpa_without_summer !=0">
+                  {{totgpa_without_summer | number:'1.1-2'}}
+                </div>
+              </div>
+                <div class="row" *ngFor="let year of mainForm['controls'].years['controls']; let ix=index"  >
+                    <div class="col-12" [formGroupName]="ix">
+                        <div class="row">
+                            <div class="col-6">
+                                <h2 style="color:#9c8787">Year- {{(ix)+1 }}- <i class="fa fa-minus-circle   d-inline" style="color:#DD0000" (click)="removeYear(ix)"></i>
+                                </h2>
+                                
+                            </div>
+                            <div class="col-6">
+                                <button (keydown.enter)="$event.preventDefault()" (click)="addCourse(ix)"  class="btn btn-primary">+ Add Course</button>
+                            </div>
+                        </div>
+                        <div class="row"   >
+                            <table class="table table-sm" formArrayName="courses"  >
+                                <thead>
+                                  <tr>
+                                    <th  style="width:4%" >Course #</th>
+                                    <th  style="width:20%" >Name</th>
+                                    <th  style="width:24%" >Weight</th>
+                                    <th  style="width:20%" >Grade</th>
+                                    <th  style="width:28%" >Semester Type</th>
+                                  </tr>
+                                </thead>
+                                <tbody >
+                                  <tr *ngFor="let course of year['controls'].courses['controls']; let iy=index" formGroupName="{{iy}}">
+                                    <th scope="row"> {{iy+1}}
+                                          </th>
+                                    <td> 
+                                        <div class="form-group">
+                                        <input (keydown.enter)="$event.preventDefault();onSubmit()" type="text" formControlName="courseName" class="form-control"  placeholder="Course Name"
+                                        [ngClass]="{ 'from-control':true,'is-invalid': course.get('courseName').invalid && course.get('courseName').touched   }">
+                                        
+                                        <div *ngIf="submitted && course.get('courseName').invalid" class="text-danger">
+                                            <div >Course Name is required</div>
+                                        </div>
+                                    </div>
+                                    </td>
+                                    <td>
+                      <input (keydown.enter)="$event.preventDefault();onSubmit()" type="number" formControlName="courseWeight" class="form-control auto"   value="0.5">                               
+
+                                    </td>
+                                    <td>
+
+                                      <div class="d-inline-flex">
+
+                                        
+                                        <div>
+                                          <select name="from_year" class="form-control " formControlName="grade" (change)="grade_changed(ix,iy,$event.target.value)">
+                                            <option *ngFor="let grade of final_grade_array; let i=index" [value]="grade_array_values[i]" >
+                                           {{grade}}
+                                            </option>
+                                                         
+                                          
+                                          </select>
+                                        </div>
+                                        <div class="ml-2 mt-2">
+                                          <label for="from_year"><small><strong>{{chosen_grade[ix*100+iy]}}</strong></small></label>
+                                        </div>
+                                    </div>
+
+                                        
+
+                                    </td>
+                                    <td><div class="form-group input-group">
+                            
+                                        
+                                         
+                            
+                                            <select class="form-control" formControlName="semesterToken" >
+                                              <option selected  [value]="1" >
+                                                Fall/Winter
+                              
+                                              </option>
+                                              <option [value]="2" >
+                                               Summer
+                              
+                                              </option>
+                                            </select>
+                                          
+                                            <span class="input-group-addon " style="margin-left: 0.5rem;margin-top:.5rem ; cursor: pointer;"><i class="fa fa-minus-circle  fa-lg d-inline" style="color:#DD0000" (click)="removeCourse(ix,iy)"></i></span>
+                    
+                                      
+                                      </div></td>
+                                  </tr>
+                                  <tr>
+                                    <th scope="col" colspan="2" style="width:50%"   >Year {{ix+1}} GPA (with summer)</th>
+                                    <th scope="col" colspan="2" style="width:50%" *ngIf="gpa_array_summer_cumulative[ix] !=0" >{{gpa_array_summer_cumulative[ix]}}</th>
+                                  
+                                  </tr>
+                                  <tr>
+                                    <th scope="col" colspan="2"  >Year {{ix + 1}} GPA (without summer)</th>
+                                    <th scope="col" colspan="2" *ngIf="gpa_array_withoutsummer_cumulative[ix] !=0"  >{{gpa_array_withoutsummer_cumulative[ix]}}</th>
+                                  
+                                  </tr>
+                                  </tbody>
+                             </table>
+                        </div>
+                        
+                    </div>
+                  </div>
+                
+            </div>
+            
+        </div>
+
+
+
+
+        
+       </div>
+    </div>
+<!--form row ends-->
+
+<div class="row mb-3">
+  <div class="col-4">
+    <button type="button" (click)="addYear()" (keydown.enter)="$event.preventDefault()" class="btn btn-success">+ Add Year</button>
+  </div>
+
+    <div class="col-4">
+      <button type="submit" style="width: 80%;" (keydown.enter)="onSubmit()"  class="btn btn-primary">Submit</button>
+    </div>
+    
+      <div class="col-4 text-center">
+        <button (click)="openDialog()" (keydown.enter)="$event.preventDefault()" class="btn btn-danger  mr3">Email Results</button>
+      </div>
+</div>
+
+
+</form>
+
+<div class="row mb-5" style="font-size:11px"><div class="col">
+  <p style="font-size:16px">
+    For more helpful free tools and resources, please visit: <a href="http://www.futurememd.com" target="_blank">www.futurememd.com</a>
+  </p>
+  <p>
+  <span style="font-weight: 600;" >DISCLAIMER:</span> The FutureMeMD OMSAS GPA Calculator is a free calculator used to help students calculate their OMSAS GPA in a fast and easy way. It is a property of FutureMeMD and copying its content without permission would result in legal action. We try to keep it as accurate as possible but we do not guarantee
+  its accuracy based on changes in the OMSAS criteria. By using this calculator, you acknowledge and accept that any information received from this calculator tool is designed for comparative purposes only, and that we cannot guarantee its accuracy. This calculator tool is not affiliated, nor endorsed by OMSAS or any Canadian University. By providing your email to send yourself a copy of the results, you give FutureMeMD permission to send you promotional material that you can unsubscribe from at any time.</p>
+</div></div>
+
+</div>

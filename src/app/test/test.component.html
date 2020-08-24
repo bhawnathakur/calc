@@ -1,0 +1,97 @@
+<mat-toolbar color="primary" >
+  <mat-toolbar-row  >
+    
+    <span class="title-center" >OMSAS GPA Calculator</span>
+  </mat-toolbar-row>
+  
+</mat-toolbar>
+  <mat-toolbar>
+    <span>My Application</span>
+  </mat-toolbar>
+
+<mat-toolbar color="primary" >
+  <mat-toolbar-row  >
+    
+    <span class="title-center" >OMSAS GPA Calculator</span>
+  </mat-toolbar-row>
+  
+</mat-toolbar>
+<mat-toolbar color="primary" >
+  <mat-toolbar-row  >
+    
+    <span class="title-center" >OMSAS GPA Calculator</span>
+  </mat-toolbar-row>
+  
+  </mat-toolbar>
+<div class="container">
+  <div class="row" style="margin:10px 0">
+    <div class="col-8">
+      <img src="assets/img/FutureMe_logo.png" class="img-fluid"  alt="">
+    </div>
+    <div class="col-4">
+      <button class="btn btn-danger">Email Result</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col category_heading" >
+       Select University
+    </div>
+    <div class="col">
+        
+          <div class="form-group">
+            xzc
+            <select class="form-control" style="color:red" >hg
+              <option *ngFor="let university of univ_array; let i=index" value="university" >
+                {{ university}}df
+
+              </option>
+              
+            </select>
+          </div> 
+          
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<form [formGroup]="mainForm"> 
+  <!-- X -->
+  <div formArrayName="Xs">
+    <div *ngFor="let X of mainForm['controls'].years['controls']; let ix=index">
+      <div formGroupName="{{ix}}" class="Xs">
+        {{ix}}
+        <input type="text" formControlName="X">
+       
+        <!-- Y -->
+        <div formArrayName="Ys">
+          <div *ngFor="let Y of X['controls'].courses['controls']; let iy=index">
+            <div formGroupName="{{iy}}" class="Ys">
+              <input type="text" formControlName="Y1">sdfsdf
+              {{iy}}
+              <input type="text" formControlName="Y2">
+            
+            
+            </div>
+          </div>
+          <input type="button" (click)="addCourses(ix)" value="Add Y">
+        </div>
+        <!-- Y End-->
+      </div>
+    </div>
+    <input type="button" (click)="addYears()" value="Add X">
+  </div>
+ 
+</form>
+
+  <h5>Field Values</h5>
+  <pre style="font-size:15px">{{ mainForm.value | json }}</pre>

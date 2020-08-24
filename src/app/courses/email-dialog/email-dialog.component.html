@@ -1,0 +1,43 @@
+<div class="container">
+    <div class="row">
+        <div class="col text-right">
+<button [mat-dialog-close]="true" class="btn btn-danger">X</button>
+        </div>
+    </div>
+    <form  [formGroup]="emailForm"  (ngSubmit)="onSubmit()" >
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="usr">Name:</label>
+                    <input type="text" class="form-control" formControlName="name" placeholder="Name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="name">
+                  
+                    <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                        <div *ngIf="f.name.errors.required">Last Name is required</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="form-group">
+                    <label for="pwd">Email:</label>
+                    <input type="text" formControlName="email" class="form-control" placeholder="Email" id="email" 
+                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" >
+                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                        <div *ngIf="f.email.errors.required">Email is required</div>
+                        <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                    </div>
+                  </div> 
+            </div>
+        </div>
+          <div class="row">
+              <div class="col"></div>
+              <div class="col">
+                  <button class="btn btn-primary">
+                      Send Email
+                  </button>
+              </div>
+          </div>
+
+    </form>
+</div>
